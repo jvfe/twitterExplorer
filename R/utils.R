@@ -10,9 +10,9 @@
 #'
 #' @examples
 get_unique_value <- function(data, col) {
-  col <- enquo(col)
+  col <- dplyr::enquo(col)
   data %>%
-    pull(!!col) %>%
+    dplyr::pull(!!col) %>%
     unique() %>%
     length()
 }
@@ -20,8 +20,8 @@ get_unique_value <- function(data, col) {
 
 #' Get code for embedding a tweet
 #'
-#' @param user
-#' @param status_id
+#' @param user User screename
+#' @param status_id Tweet Status ID
 #'
 #' @return
 #' @export
