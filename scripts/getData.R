@@ -2,9 +2,9 @@ library(magrittr)
 devtools::load_all()
 #### Function call ####
 
-getData("#user2021",
+getData("#rstats",
         5000,
-        "data/useR_tweets.csv.gz",
+        "data/tweets.csv.gz",
         "rtweet-exploration",
         include_rts = FALSE,
         retryonratelimit = TRUE)
