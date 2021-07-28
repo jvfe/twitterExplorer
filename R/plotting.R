@@ -10,7 +10,8 @@
 #' @examples
 plot_tweet_volume <- function(data) {
   this_month <- lubridate::floor_date(today(), "month")
-  
+  earliest_day <- min(data$time)
+
   data %>%
     echarts4r::e_charts(time) %>%
     echarts4r::e_line(n,
@@ -36,7 +37,7 @@ plot_tweet_volume <- function(data) {
         "
     function(params) {
       let date = new Date(params[0].value[0])
-      let options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric'}
+      let options = { year: 'numeric', month: 'short', day: 'numeric'}
       let title = `<strong>${date.toLocaleDateString('en-US', options=options)}</strong>`
       let num = `${params[0].value[1]} tweets`
       return(`${title}</br>${num}`);
@@ -49,6 +50,12 @@ plot_tweet_volume <- function(data) {
                       end = 100) %>%
     echarts4r::e_zoom(
       dataZoomIndex = 0,
+      startValue = earliest_day,
+      endValue = today(),
+      btn = "allTimeBtn"
+    ) %>%
+    echarts4r::e_zoom(
+      dataZoomIndex = 0,
       startValue = today() - 7,
       endValue = today(),
       btn = "weekBtn"
@@ -59,6 +66,10 @@ plot_tweet_volume <- function(data) {
       endValue = today(),
       btn = "monthBtn"
     ) %>%
+    echarts4r::e_button(id = "allTimeBtn",
+                        position = "top",
+                        class = "btn btn-primary btn-sm",
+                        "All Time") %>%
     echarts4r::e_button(id = "weekBtn",
                         position = "top",
                         class = "btn btn-primary btn-sm",
@@ -78,12 +89,12 @@ plot_tweet_volume <- function(data) {
 #'
 #' @examples
 plot_tweet_by_hour <- function(tweet_dataset) {
-  tweet_dataset %>% 
+  tweet_dataset %>%
     dplyr::group_by(hour = hour(created_at)) %>%
     dplyr::summarise(count = n()) %>%
     dplyr::ungroup() %>%
     echarts4r::e_charts(hour) %>%
-    echarts4r::e_step(count, name = "Tweets", step = "middle", legend = FALSE) %>%
+    echarts4r::e_area(count, name = "Tweets", legend = FALSE) %>%
     echarts4r::e_x_axis(
       min = 0,
       max = 23,
