@@ -12,7 +12,7 @@
 #' @export
 #' @importFrom magrittr %>%
 #' @examples
-getData <- function(hashtag, n, filename, appname, ...) {
+getData <- function(hashtag, n, filename, ...) {
   logger::log_threshold(logger::INFO)
 
   logger::log_info("Loading API keys and previous data")
@@ -28,7 +28,6 @@ getData <- function(hashtag, n, filename, appname, ...) {
     ))
 
   token <- rtweet::create_token(
-    app = appname,
     consumer_key = secrets["TWITTER_KEY"],
     consumer_secret = secrets["TWITTER_SECRET"],
     access_token = secrets["ACCESS_TOKEN"],
@@ -109,9 +108,7 @@ clean_data <- function(dataset) {
     )) %>%
     dplyr::group_by(status_id) %>%
     dplyr::filter(dplyr::row_number(dplyr::desc(favorite_count)) == 1) %>%
-    dplyr::ungroup() %>%
-    janitor::remove_empty(which = "cols")
-
+    dplyr::ungroup()
 }
 
 # Functions from the rtweet package to clean IDs
