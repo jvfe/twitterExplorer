@@ -36,7 +36,6 @@ plot_tweet_volume <- function(data) {
         )
       )
     ) %>%
-    echarts4r::e_theme("westeros") %>%
     echarts4r::e_toolbox_feature(feature = "magicType",
                       type = list("area", "line", "bar")) %>%
     echarts4r::e_toolbox_feature("restore") %>%
@@ -53,7 +52,7 @@ plot_tweet_volume <- function(data) {
     echarts4r::e_zoom(
       dataZoomIndex = 0,
       startValue = earliest_day,
-      endValue = today(),
+      endValue = lubridate::today(),
       btn = "allTimeBtn"
     ) %>%
     echarts4r::e_zoom(
@@ -92,8 +91,8 @@ plot_tweet_volume <- function(data) {
 #' @examples
 plot_tweet_by_hour <- function(tweet_dataset) {
   tweet_dataset %>%
-    dplyr::group_by(hour = hour(created_at)) %>%
-    dplyr::summarise(count = n()) %>%
+    dplyr::group_by(hour = lubridate::hour(created_at)) %>%
+    dplyr::summarise(count = dplyr::n()) %>%
     dplyr::ungroup() %>%
     echarts4r::e_charts(hour) %>%
     echarts4r::e_area(count, name = "Tweets", legend = FALSE) %>%
